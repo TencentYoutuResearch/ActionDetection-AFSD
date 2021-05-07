@@ -1,0 +1,42 @@
+dataset:
+  num_classes: 21
+  training:
+    video_mp4_path: ./datasets/thumos14/validation/
+    video_info_path: thumos_annotations/val_video_info.csv
+    video_anno_path: thumos_annotations/val_Annotation_ours.csv
+    video_data_path: ./datasets/thumos14/validation_flow_npy/
+    clip_length: 256
+    clip_stride: 30
+    crop_size: 96
+  testing:
+    video_mp4_path: ./datasets/thumos14/test/
+    video_info_path: thumos_annotations/test_video_info.csv
+    video_anno_path: thumos_annotations/test_Annotation_ours.csv
+    video_data_path: ./datasets/thumos14/test_flow_npy/
+    crop_size: 96
+    clip_length: 256
+    clip_stride: 128
+
+model:
+  in_channels: 2
+  freeze_bn: true
+  freeze_bn_affine: true
+  backbone_model: ./models/i3d_models/flow_imagenet.pt
+
+training:
+  batch_size: 1
+  learning_rate: 1e-5
+  weight_decay: 1e-3
+  max_epoch: 16
+  focal_loss: true
+  checkpoint_path: ./models/thumos14_flow/
+  random_seed: 2020
+
+testing:
+  conf_thresh: 0.01
+  top_k: 5000
+  nms_thresh: 0.5
+  nms_sigma: 0.5
+  checkpoint_path: ./models/thumos14_flow/checkpoint-16.ckpt
+  output_path: ./output
+  output_json: detection_results.json

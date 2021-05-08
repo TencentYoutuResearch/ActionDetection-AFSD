@@ -26,7 +26,7 @@ While most current models achieve good results by using pre-defined anchors and 
 
 ### Environment
 - Python 3.7
-- PyTorch == 1.4.0
+- PyTorch == 1.4.0 **(Please make sure your pytorch version is 1.4)**
 - NVIDIA GPU
 
 ### Setup
@@ -36,11 +36,11 @@ python3 setup.py develop
 ```
 ### Data Preparation
 - **THUMOS14 RGB data:**
-1. Download post-processed RGB npy data (13.7G): [\[Weiyun\]](https://share.weiyun.com/bP62lmHj)
+1. Download post-processed RGB npy data (13.7GB): [\[Weiyun\]](https://share.weiyun.com/bP62lmHj)
 2. Unzip the RGB npy data to `./datasets/thumos14/validation_npy/` and `./datasets/thumos14/test_npy/`
 
 - **THUMOS14 flow data:**
-1. Because it costs more time to generate flow data for THUMOS14, to make easy to run flow model, we provide the post-processed flow data in Google Drive and Weiyun:
+1. Because it costs more time to generate flow data for THUMOS14, to make easy to run flow model, we provide the post-processed flow data in Google Drive and Weiyun (3.4GB):
 [\[Google Drive\]](https://drive.google.com/file/d/1e-6JX-7nbqKizQLHsi7N_gqtxJ0_FLXV/view?usp=sharing),
 [\[Weiyun\]](https://share.weiyun.com/uHtRwrMb)  
 2. Unzip the flow npy data to `./datasets/thumos14/validation_flow_npy/` and `./datasets/thumos14/test_flow_npy/`

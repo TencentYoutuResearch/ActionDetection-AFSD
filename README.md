@@ -31,7 +31,7 @@ While most current models achieve good results by using pre-defined anchors and 
 
 ### Setup
 ```shell script
-pip3 install -r requrements.txt
+pip3 install -r requirements.txt
 python3 setup.py develop
 ```
 ### Data Preparation

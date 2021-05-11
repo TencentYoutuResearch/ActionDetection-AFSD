@@ -77,6 +77,8 @@ python3 AFSD/thumos14/test.py configs/thumos14.yaml --fusion --output_json=thumo
 ```
 
 ### Evaluation
+The output result json of pretrained model can be downloaded from: [\[Google Drive\]](https://drive.google.com/drive/folders/10VCWQi1uXNNpDKNaTVnn7vSD9YVAp8ut?usp=sharing),
+[\[Weiyun\]](https://share.weiyun.com/R7RXuFFW)
 ```shell script
 # evaluate THUMOS14 fusion result as example
 python3 eval.py output/thumos14_fusion.json

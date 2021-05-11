@@ -3,7 +3,6 @@
 # Small modification from ActivityNet Code
 
 import json
-import warnings
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
@@ -12,24 +11,23 @@ from .utils_eval import get_blocked_videos
 from .utils_eval import interpolated_prec_rec
 from .utils_eval import segment_iou
 
+import warnings
 warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 
-GROUND_TRUTH_FIELDS = ['database']
-PREDICTION_FIELDS = ['results', 'version', 'external_data']
 
 
 class ANETdetection(object):
+    GROUND_TRUTH_FIELDS = ['database']
+    # GROUND_TRUTH_FIELDS = ['database', 'taxonomy', 'version']
+    PREDICTION_FIELDS = ['results', 'version', 'external_data']
+
     def __init__(self, ground_truth_filename=None, prediction_filename=None,
-                 ground_truth_fields=None,
-                 prediction_fields=None,
-                 tiou_thresholds=np.linspace(0.5, 0.95, 10),
-                 subset='validation', verbose=False,
+                 ground_truth_fields=GROUND_TRUTH_FIELDS,
+                 prediction_fields=PREDICTION_FIELDS,
+                 tiou_thresholds=np.linspace(0.5, 0.95, 10), 
+                 subset='validation', verbose=False, 
                  check_status=False):
-        if ground_truth_fields is None:
-            ground_truth_fields = GROUND_TRUTH_FIELDS
-        if prediction_fields is None:
-            prediction_fields = PREDICTION_FIELDS
         if not ground_truth_filename:
             raise IOError('Please input a valid ground truth file.')
         if not prediction_filename:
@@ -54,12 +52,12 @@ class ANETdetection(object):
         self.prediction = self._import_prediction(prediction_filename)
 
         if self.verbose:
-            print('[INIT] Loaded annotations from {} subset.'.format(subset))
+            print ('[INIT] Loaded annotations from {} subset.'.format(subset))
             nr_gt = len(self.ground_truth)
-            print('\tNumber of ground truth instances: {}'.format(nr_gt))
+            print ('\tNumber of ground truth instances: {}'.format(nr_gt))
             nr_pred = len(self.prediction)
-            print('\tNumber of predictions: {}'.format(nr_pred))
-            print('\tFixed threshold for tiou score: {}'.format(self.tiou_thresholds))
+            print ('\tNumber of predictions: {}'.format(nr_pred))
+            print ('\tFixed threshold for tiou score: {}'.format(self.tiou_thresholds))
 
     def _import_ground_truth(self, ground_truth_filename):
         """Reads ground truth file, checks if it is well formatted, and returns
@@ -159,9 +157,9 @@ class ANETdetection(object):
         """
         try:
             return prediction_by_label.get_group(cidx).reset_index(drop=True)
-        except ValueError:
+        except:
             if self.verbose:
-                print('Warning: No predictions of label \'%s\' were provdied.' % label_name)
+                print ('Warning: No predictions of label \'%s\' were provdied.' % label_name)
             return pd.DataFrame()
 
     def wrapper_compute_average_precision(self):
@@ -174,14 +172,14 @@ class ANETdetection(object):
         prediction_by_label = self.prediction.groupby('label')
 
         results = Parallel(n_jobs=len(self.activity_index))(
-            delayed(compute_average_precision_detection)(
-                ground_truth=ground_truth_by_label.get_group(cidx).reset_index(drop=True),
-                prediction=self._get_predictions_with_label(prediction_by_label, label_name, cidx),
-                tiou_thresholds=self.tiou_thresholds,
-            ) for label_name, cidx in self.activity_index.items())
+                    delayed(compute_average_precision_detection)(
+                        ground_truth=ground_truth_by_label.get_group(cidx).reset_index(drop=True),
+                        prediction=self._get_predictions_with_label(prediction_by_label, label_name, cidx),
+                        tiou_thresholds=self.tiou_thresholds,
+                    ) for label_name, cidx in self.activity_index.items())
 
         for i, cidx in enumerate(self.activity_index.values()):
-            ap[:, cidx] = results[i]
+            ap[:,cidx] = results[i]
 
         return ap
 
@@ -196,14 +194,13 @@ class ANETdetection(object):
         self.average_mAP = self.mAP.mean()
 
         if self.verbose:
-            print('[RESULTS] Performance on ActivityNet detection task.')
-            print('Average-mAP: {}'.format(self.average_mAP))
-
+            print ('[RESULTS] Performance on ActivityNet detection task.')
+            print ('Average-mAP: {}'.format(self.average_mAP))
+            
         return self.mAP, self.average_mAP, self.ap
 
 
-def compute_average_precision_detection(ground_truth, prediction,
-                                        tiou_thresholds=np.linspace(0.5, 0.95, 10)):
+def compute_average_precision_detection(ground_truth, prediction, tiou_thresholds=np.linspace(0.5, 0.95, 10)):
     """Compute average precision (detection task) between ground truth and
     predictions data frames. If multiple predictions occurs for the same
     predicted segment, only the one with highest score is matches as
@@ -230,7 +227,7 @@ def compute_average_precision_detection(ground_truth, prediction,
         return ap
 
     npos = float(len(ground_truth))
-    lock_gt = np.ones((len(tiou_thresholds), len(ground_truth))) * -1
+    lock_gt = np.ones((len(tiou_thresholds),len(ground_truth))) * -1
     # Sort predictions by decreasing score order.
     sort_idx = prediction['score'].values.argsort()[::-1]
     prediction = prediction.loc[sort_idx].reset_index(drop=True)
@@ -248,7 +245,7 @@ def compute_average_precision_detection(ground_truth, prediction,
         try:
             # Check if there is at least one ground truth in the video associated.
             ground_truth_videoid = ground_truth_gbvn.get_group(this_pred['video-id'])
-        except ValueError:
+        except Exception as e:
             fp[:, idx] = 1
             continue
 
@@ -279,6 +276,7 @@ def compute_average_precision_detection(ground_truth, prediction,
     precision_cumsum = tp_cumsum / (tp_cumsum + fp_cumsum)
 
     for tidx in range(len(tiou_thresholds)):
-        ap[tidx] = interpolated_prec_rec(precision_cumsum[tidx, :], recall_cumsum[tidx, :])
+        ap[tidx] = interpolated_prec_rec(precision_cumsum[tidx,:], recall_cumsum[tidx,:])
+
 
     return ap

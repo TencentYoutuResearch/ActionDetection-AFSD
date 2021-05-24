@@ -5,6 +5,7 @@ This is an official implementation in PyTorch of AFSD. Our paper is available at
 ![](figures/framework.png)
 
 ## Updates
+- (May, 2021) Add data processing code for ActivityNet v1.3: [\[ANET_README\]](AFSD/anet/README.md)
 - (May, 2021) We released AFSD training and inference code for THUMOS14 dataset.
 - (February, 2021) AFSD is accepted by CVPR2021.
 
@@ -36,11 +37,11 @@ python3 setup.py develop
 ```
 ### Data Preparation
 - **THUMOS14 RGB data:**
-1. Download post-processed RGB npy data (13.7GB): [\[Weiyun\]](https://share.weiyun.com/bP62lmHj)
+1. Download pre-processed RGB npy data (13.7GB): [\[Weiyun\]](https://share.weiyun.com/bP62lmHj)
 2. Unzip the RGB npy data to `./datasets/thumos14/validation_npy/` and `./datasets/thumos14/test_npy/`
 
 - **THUMOS14 flow data:**
-1. Because it costs more time to generate flow data for THUMOS14, to make easy to run flow model, we provide the post-processed flow data in Google Drive and Weiyun (3.4GB):
+1. Because it costs more time to generate flow data for THUMOS14, to make easy to run flow model, we provide the pre-processed flow data in Google Drive and Weiyun (3.4GB):
 [\[Google Drive\]](https://drive.google.com/file/d/1e-6JX-7nbqKizQLHsi7N_gqtxJ0_FLXV/view?usp=sharing),
 [\[Weiyun\]](https://share.weiyun.com/uHtRwrMb)  
 2. Unzip the flow npy data to `./datasets/thumos14/validation_flow_npy/` and `./datasets/thumos14/test_flow_npy/`
@@ -58,7 +59,7 @@ Testing videos: https://storage.googleapis.com/thumos14_files/TH14_Test_set_mp4.
 
 - **Flow data generation manually:**
 1. If you should generate flow data manually, firstly install the [denseflow](https://github.com/open-mmlab/denseflow).
-2. Prepare the post-processed RGB data.
+2. Prepare the pre-processed RGB data.
 3. Check and run the script: `python3 AFSD/common/gen_denseflow_npy.py`
 
 ### Inference

@@ -5,7 +5,7 @@ This is an official implementation in PyTorch of AFSD. Our paper is available at
 ![](figures/framework.png)
 
 ## Updates
-- (May, 2021) Add data processing code for ActivityNet v1.3: [\[ANET_README\]](AFSD/anet/README.md)
+- (May, 2021) Release training and inference code for ActivityNet v1.3: [\[ANET_README\]](AFSD/anet/README.md)
 - (May, 2021) We released AFSD training and inference code for THUMOS14 dataset.
 - (February, 2021) AFSD is accepted by CVPR2021.
 

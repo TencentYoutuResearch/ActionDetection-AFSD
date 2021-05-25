@@ -8,7 +8,8 @@ Note that it needs at least 1TB disk space to save and pre-process ActivityNet d
 3. Run the script to generate RGB npy input data: `python3 AFSD/anet_data/video2npy.py THREAD_NUM`
 ### Flow Data
 1. Generate video list: `python3 AFSD/anet_data/gen_video_list.py`
-2. Use [denseflow](https://github.com/open-mmlab/denseflow) to generate flow frames
+2. Use [denseflow](https://github.com/open-mmlab/denseflow) to generate flow frames: 
+`denseflow anet_anotations/anet_train_val.txt -b=20 -a=tvl1 -s=1 -o=datasets/activitynet/flow/frame_train_val_112`
 3. Run the script to generate flow npy input data: `python3 AFSD/anet_data/flow2npy.py THREAD_NUM`
 
 ## Inference
@@ -50,4 +51,10 @@ Average mAP: 0.34392610473183893
 ```
 
 ## Training
-TODO
+```shell script
+# train RGB model
+python3 AFSD/anet/train.py configs/anet.yaml --lw=1 --cw=1 --piou=0.6
+
+# train Flow model
+python3 AFSD/anet/train.py configs/anet_flow.yaml --lw=1 --cw=1 --piou=0.6
+```

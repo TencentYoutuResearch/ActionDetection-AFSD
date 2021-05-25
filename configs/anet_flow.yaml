@@ -25,8 +25,8 @@ model:
 
 training:
   batch_size: 1
-  learning_rate: 1e-5
-  weight_decay: 1e-3
+  learning_rate: 1e-4
+  weight_decay: 1e-4
   max_epoch: 16
   focal_loss: true
   checkpoint_path: models/anet_flow/

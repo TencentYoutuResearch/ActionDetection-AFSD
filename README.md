@@ -82,7 +82,7 @@ The output json results of pretrained model can be downloaded from: [\[Google Dr
 [\[Weiyun\]](https://share.weiyun.com/R7RXuFFW)
 ```shell script
 # evaluate THUMOS14 fusion result as example
-python3 eval.py output/thumos14_fusion.json
+python3 AFSD/thumos14/eval.py output/thumos14_fusion.json
 
 mAP at tIoU 0.3 is 0.6728296149479254
 mAP at tIoU 0.4 is 0.6242590551201842

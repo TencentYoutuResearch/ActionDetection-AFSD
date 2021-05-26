@@ -6,11 +6,16 @@ Note that it needs at least 1TB disk space to save and pre-process ActivityNet d
 1. Download original ActivityNet v1.3 videos and put them in `datasets/activitynet/v1-3/train_val`
 2. Run the script to generate sampled videos: `python3 AFSD/anet_data/transform_videos.py THREAD_NUM`
 3. Run the script to generate RGB npy input data: `python3 AFSD/anet_data/video2npy.py THREAD_NUM`
+
+In addition, the sampled videos (32.4GB) is provided: [\[Weiyun\]](https://share.weiyun.com/PXXtHcbp), and only run the step 3 to generate RGB npy data.
+
 ### Flow Data
 1. Generate video list: `python3 AFSD/anet_data/gen_video_list.py`
 2. Use [denseflow](https://github.com/open-mmlab/denseflow) to generate flow frames: 
 `denseflow anet_anotations/anet_train_val.txt -b=20 -a=tvl1 -s=1 -o=datasets/activitynet/flow/frame_train_val_112`
 3. Run the script to generate flow npy input data: `python3 AFSD/anet_data/flow2npy.py THREAD_NUM`
+
+In addition, the flow frames (17.6GB) is provided: [\[Weiyun\]](https://share.weiyun.com/v3nI6EDv), and only run the step 3 to generate flow npy data.
 
 ## Inference
 1. We provide the pretrained models contain final RGB and flow models for ActivityNet dataset:

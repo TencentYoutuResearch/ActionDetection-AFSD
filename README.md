@@ -104,10 +104,12 @@ python3 AFSD/thumos14/train.py configs/thumos14_flow.yaml --lw=10 --cw=1 --piou=
 ## Citation
 If you find this project useful for your research, please use the following BibTeX entry.
 ```
-@inproceedings{lin2021afsd,
-  title={Learning Salient Boundary Feature for Anchor-free Temporal Action Localization},
-  author={Chuming Lin*, Chengming Xu*, Donghao Luo, Yabiao Wang, Ying Tai, Chengjie Wang, Jilin Li, Feiyue Huang, Yanwei Fu},
-  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
-  year={2021}
+@InProceedings{Lin_2021_CVPR,
+    author    = {Lin, Chuming and Xu, Chengming and Luo, Donghao and Wang, Yabiao and Tai, Ying and Wang, Chengjie and Li, Jilin and Huang, Feiyue and Fu, Yanwei},
+    title     = {Learning Salient Boundary Feature for Anchor-free Temporal Action Localization},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month     = {June},
+    year      = {2021},
+    pages     = {3320-3329}
 }
 ```

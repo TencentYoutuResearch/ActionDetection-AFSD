@@ -55,12 +55,12 @@ Training videos: https://storage.googleapis.com/thumos14_files/TH14_validation_s
 Testing videos: https://storage.googleapis.com/thumos14_files/TH14_Test_set_mp4.zip  
 (unzip password is `THUMOS14_REGISTERED`)  
 2. Move the training videos to `./datasets/thumos14/validation/` and the testing videos to `./datasets/thumos14/test/`
-3. Run the data processing script: `python3 AFSD/common/video2npy.py`
+3. Run the data processing script: `python3 AFSD/common/video2npy.py configs/thumos14.yaml`
 
 - **Flow data generation manually:**
 1. If you should generate flow data manually, firstly install the [denseflow](https://github.com/open-mmlab/denseflow).
 2. Prepare the pre-processed RGB data.
-3. Check and run the script: `python3 AFSD/common/gen_denseflow_npy.py`
+3. Check and run the script: `python3 AFSD/common/gen_denseflow_npy.py configs/thumos14_flow.yaml`
 
 ### Inference
 We provide the pretrained models contain I3D backbone model and final RGB and flow models for THUMOS14 dataset:

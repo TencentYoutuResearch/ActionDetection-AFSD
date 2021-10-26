@@ -20,14 +20,13 @@ num_classes = config['dataset']['num_classes']
 checkpoint_path = config['training']['checkpoint_path']
 focal_loss = config['training']['focal_loss']
 random_seed = config['training']['random_seed']
+ngpu = config['ngpu']
 
 train_state_path = os.path.join(checkpoint_path, 'training')
 if not os.path.exists(train_state_path):
     os.makedirs(train_state_path)
 
 resume = config['training']['resume']
-config['training']['ssl'] = 0.1
-
 
 def print_training_info():
     print('batch size: ', batch_size)
@@ -37,11 +36,11 @@ def print_training_info():
     print('checkpoint path: ', checkpoint_path)
     print('loc weight: ', config['training']['lw'])
     print('cls weight: ', config['training']['cw'])
-    print('iou weight: ', config['training']['piou'])
     print('ssl weight: ', config['training']['ssl'])
     print('piou:', config['training']['piou'])
     print('resume: ', resume)
-
+    print('gpu num: ', ngpu)
+    
 
 def set_seed(seed):
     torch.manual_seed(seed)
@@ -117,7 +116,7 @@ def forward_one_epoch(net, clips, targets, scores=None, training=True, ssl=True)
 
     if training:
         if ssl:
-            output_dict = net(clips, proposals=targets, ssl=ssl)
+            output_dict = net.module(clips, proposals=targets, ssl=ssl)
         else:
             output_dict = net(clips, ssl=False)
     else:
@@ -136,7 +135,7 @@ def forward_one_epoch(net, clips, targets, scores=None, training=True, ssl=True)
         loss_l, loss_c, loss_prop_l, loss_prop_c, loss_ct = CPD_Loss(
             [output_dict['loc'], output_dict['conf'],
              output_dict['prop_loc'], output_dict['prop_conf'],
-             output_dict['center'], output_dict['priors']],
+             output_dict['center'], output_dict['priors'][0]],
             targets)
         loss_start, loss_end = calc_bce_loss(output_dict['start'], output_dict['end'], scores)
         scores_ = F.interpolate(scores, scale_factor=1.0 / 4)
@@ -180,13 +179,18 @@ def run_one_epoch(epoch, net, optimizer, data_loader, epoch_step_num, training=T
             loss_ct = loss_ct * config['training']['cw']
             cost = loss_l + loss_c + loss_prop_l + loss_prop_c + loss_ct + loss_start + loss_end
 
-            if flags[0]:
-                loss_trip = forward_one_epoch(net, ssl_clips, ssl_targets, training=training,
-                                              ssl=True)
-                loss_trip *= config['training']['ssl']
-                cost = cost + loss_trip
-                loss_trip_val += loss_trip.cpu().detach().numpy()
-
+            ssl_count = 0
+            loss_trip = 0
+            for i in range(len(flags)):
+                if flags[i] and config['training']['ssl'] > 0:
+                    loss_trip += forward_one_epoch(net, ssl_clips[i].unsqueeze(0), [ssl_targets[i]], 
+                                                   training=training, ssl=True) * config['training']['ssl']
+                    loss_trip_val += loss_trip.cpu().detach().numpy()
+                    ssl_count += 1
+            if ssl_count:
+                loss_trip_val /= ssl_count
+                loss_trip /= ssl_count
+            cost = cost + loss_trip
             if training:
                 optimizer.zero_grad()
                 cost.backward()
@@ -236,7 +240,7 @@ if __name__ == '__main__':
     """
     net = BDNet(in_channels=config['model']['in_channels'],
                 backbone_model=config['model']['backbone_model'])
-    net = nn.DataParallel(net, device_ids=[0]).cuda()
+    net = nn.DataParallel(net, device_ids=list(range(ngpu))).cuda()
 
     """
     Setup optimizer

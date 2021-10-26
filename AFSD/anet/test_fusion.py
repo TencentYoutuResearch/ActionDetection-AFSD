@@ -129,7 +129,7 @@ def sub_processor(lock, pid, video_list):
                 flow_output_dict = flow_net(flow_clip)
 
             loc, conf, priors = rgb_output_dict['loc'], rgb_output_dict['conf'], \
-                                rgb_output_dict['priors']
+                                rgb_output_dict['priors'][0]
             prop_loc, prop_conf = rgb_output_dict['prop_loc'], rgb_output_dict['prop_conf']
             center = rgb_output_dict['center']
 
@@ -154,7 +154,7 @@ def sub_processor(lock, pid, video_list):
             rgb_center = center
 
             loc, conf, priors = flow_output_dict['loc'], flow_output_dict['conf'], \
-                                flow_output_dict['priors']
+                                flow_output_dict['priors'][0]
             prop_loc, prop_conf = flow_output_dict['prop_loc'], flow_output_dict['prop_conf']
             center = flow_output_dict['center']
 

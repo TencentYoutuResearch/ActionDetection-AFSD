@@ -350,7 +350,7 @@ class CoarsePyramid(nn.Module):
         prop_loc = torch.cat([o.view(batch_num, -1, 2) for o in prop_locs], 1)
         prop_conf = torch.cat([o.view(batch_num, -1, num_classes) for o in prop_confs], 1)
         center = torch.cat([o.view(batch_num, -1, 1) for o in centers], 1)
-        priors = torch.cat(self.priors, 0).to(loc.device)
+        priors = torch.cat(self.priors, 0).to(loc.device).unsqueeze(0)
         return loc, conf, prop_loc, prop_conf, center, priors, start, end, \
                start_loc_prop, end_loc_prop, start_conf_prop, end_conf_prop
 

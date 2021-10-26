@@ -117,7 +117,7 @@ if __name__ == '__main__':
                 if fusion:
                     flow_output_dict = flow_net(flow_clip)
 
-            loc, conf, priors = output_dict['loc'], output_dict['conf'], output_dict['priors']
+            loc, conf, priors = output_dict['loc'], output_dict['conf'], output_dict['priors'][0]
             prop_loc, prop_conf = output_dict['prop_loc'], output_dict['prop_conf']
             center = output_dict['center']
             if fusion:
@@ -128,7 +128,7 @@ if __name__ == '__main__':
                 rgb_center = center[0]
 
                 loc, conf, priors = flow_output_dict['loc'], flow_output_dict['conf'], \
-                                    flow_output_dict['priors']
+                                    flow_output_dict['priors'][0]
                 prop_loc, prop_conf = flow_output_dict['prop_loc'], flow_output_dict['prop_conf']
                 center = flow_output_dict['center']
 
